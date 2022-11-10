@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import ListaDeCategorias from './ListaDeCategorias';
 import { getProductsFromCategoryAndQuery, getCategories } from '../services/api';
 
@@ -24,19 +25,19 @@ class Home extends Component {
     this.setState({ productList: response });
   };
 
-  handleChange = ({ target }) => {
+  handleSearchInput = ({ target }) => {
     const { name, value } = target;
     this.setState({
       [name]: value,
     });
   };
 
-  handleOnClick = () => {
+  handleCartButton = () => {
     const { history } = this.props;
     history.push('/cart');
   };
 
-  handleButton = async () => {
+  handleSearchButton = async () => {
     const { queryInput } = this.state;
     const response = await getProductsFromCategoryAndQuery(null, queryInput);
     const productList = response.results;
@@ -56,17 +57,24 @@ class Home extends Component {
             type="text"
             data-testid="query-input"
             value={ queryInput }
-            onChange={ this.handleChange }
+            onChange={ this.handleSearchInput }
             name="queryInput"
           />
           <button
             data-testid="query-button"
             type="button"
             value={ queryInput }
-            onClick={ this.handleButton }
+
+            onClick={ this.handleSearchButton }
+
           >
             Pesquisar
           </button>
+          <p
+            data-testid="home-initial-message"
+          >
+            Digite algum termo de pesquisa ou escolha uma categoria.
+          </p>
         </label>
         <div>
           Categorias
@@ -89,17 +97,23 @@ class Home extends Component {
                 Nenhum produto foi encontrado
               </span>)
             : productList.map((item) => (
-              <div data-testid="product" key={ item.id }>
-                <h3>{item.title}</h3>
-                <img src={ item.thumbnail } alt={ item.title } />
-                <h2>{ item.price }</h2>
-              </div>
+              <Link
+                key={ item.id }
+                data-testid="product-detail-link"
+                to={ `/product/${item.id}` }
+              >
+                <div data-testid="product" key={ item.id }>
+                  <h3>{item.title}</h3>
+                  <img src={ item.thumbnail } alt={ item.title } />
+                  <h2>{ item.price }</h2>
+                </div>
+              </Link>
             )) }
         </section>
         <button
           data-testid="shopping-cart-button"
           type="button"
-          onClick={ this.handleOnClick }
+          onClick={ this.handleCartButton }
         >
           Ir para o carrinho
         </button>

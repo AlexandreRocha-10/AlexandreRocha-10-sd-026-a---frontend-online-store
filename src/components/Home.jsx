@@ -64,9 +64,7 @@ class Home extends Component {
             data-testid="query-button"
             type="button"
             value={ queryInput }
-
             onClick={ this.handleSearchButton }
-
           >
             Pesquisar
           </button>

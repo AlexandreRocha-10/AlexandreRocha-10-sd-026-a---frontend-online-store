@@ -27,11 +27,7 @@ export default class ProductCard extends Component {
     return (
       <div>
         <span data-testid="product-detail-name">{ product.title }</span>
-        <img
-          data-testid="product-detail-image"
-          src={ product.thumbnail }
-          alt={ product.title }
-        />
+        <img src={ product.thumbnail } alt={ product.title } />
         <p data-testid="product-detail-price">{ product.price }</p>
         <button
           data-testid="shopping-cart-button"

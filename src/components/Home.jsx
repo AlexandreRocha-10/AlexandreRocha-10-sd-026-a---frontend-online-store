@@ -64,17 +64,10 @@ class Home extends Component {
             data-testid="query-button"
             type="button"
             value={ queryInput }
-
             onClick={ this.handleSearchButton }
-
           >
             Pesquisar
           </button>
-          <p
-            data-testid="home-initial-message"
-          >
-            Digite algum termo de pesquisa ou escolha uma categoria.
-          </p>
         </label>
         <div>
           Categorias

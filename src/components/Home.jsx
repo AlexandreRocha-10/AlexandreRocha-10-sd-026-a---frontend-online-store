@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import ListaDeCategorias from './ListaDeCategorias';
 import { getProductsFromCategoryAndQuery } from '../services/api';
 
@@ -66,11 +67,17 @@ class Home extends Component {
                 Nenhum produto foi encontrado
               </span>)
             : productList.map((item) => (
-              <div data-testid="product" key={ item.id }>
-                <h3>{item.title}</h3>
-                <img src={ item.thumbnail } alt={ item.title } />
-                <h2>{ item.price }</h2>
-              </div>
+              <Link
+                key={ item.id }
+                data-testid="product-detail-link"
+                to={ `/product/${item.id}` }
+              >
+                <div data-testid="product" key={ item.id }>
+                  <h3>{item.title}</h3>
+                  <img src={ item.thumbnail } alt={ item.title } />
+                  <h2>{ item.price }</h2>
+                </div>
+              </Link>
             )) }
         </section>
         <button

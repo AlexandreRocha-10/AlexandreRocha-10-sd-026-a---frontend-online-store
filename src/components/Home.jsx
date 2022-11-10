@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ListaDeCategorias from './ListaDeCategorias';
-import { getProductsFromCategoryAndQuery } from '../services/api';
+import { getProductsFromCategoryAndQuery, getCategories } from '../services/api';
 
 class Home extends Component {
   constructor() {
@@ -9,8 +9,20 @@ class Home extends Component {
     this.state = {
       queryInput: '',
       productList: [],
+      listaCategorias: [],
     };
   }
+
+  async componentDidMount() {
+    this.setState({ listaCategorias: await getCategories() });
+  }
+
+  onChangeCategory = async ({ target }) => {
+    const { id } = target;
+    const produtos = await getProductsFromCategoryAndQuery(id, null);
+    const response = produtos.results;
+    this.setState({ productList: response });
+  };
 
   handleChange = ({ target }) => {
     const { name, value } = target;
@@ -33,7 +45,7 @@ class Home extends Component {
   };
 
   render() {
-    const { queryInput, productList } = this.state;
+    const { queryInput, productList, listaCategorias } = this.state;
     return (
       <div>
         <label htmlFor="queryInput">
@@ -49,15 +61,28 @@ class Home extends Component {
             type="button"
             value={ queryInput }
             onClick={ this.handleButton }
-
           >
             Pesquisar
           </button>
         </label>
+        <div>
+          Categorias
+          <br />
+          <br />
+          {listaCategorias.map(({ name, id }) => (
+            <ListaDeCategorias
+              key={ id }
+              id={ id }
+              name={ name }
+              onChangeCategory={ this.onChangeCategory }
+            />
+          ))}
+        </div>
         <section>
           { productList.length === 0
             ? (
               <span data-testid="home-initial-message">
+                <br />
                 Nenhum produto foi encontrado
               </span>)
             : productList.map((item) => (
@@ -75,13 +100,14 @@ class Home extends Component {
         >
           Ir para o carrinho
         </button>
-        <ListaDeCategorias />
       </div>
     );
   }
 }
 
 Home.propTypes = {
-  history: PropTypes.string.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
 };
 export default Home;

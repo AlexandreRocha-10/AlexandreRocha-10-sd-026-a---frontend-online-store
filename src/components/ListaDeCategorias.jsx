@@ -1,35 +1,30 @@
 import { Component } from 'react';
-import { getCategories } from '../services/api';
+import PropTypes from 'prop-types';
 
 class ListaDeCategorias extends Component {
-  state = {
-    listaCategorias: [],
-  };
-
-  async componentDidMount() {
-    this.setState({ listaCategorias: await getCategories() });
-  }
-
   render() {
-    const { listaCategorias } = this.state;
+    const { name, id, onChangeCategory } = this.props;
     return (
       <div>
-        Categorias
-        <br />
-        {listaCategorias.map(({ name, id }) => (
-          <label key={ id } htmlFor="category">
-            <br />
-            {name}
-            <input
-              data-testid="category"
-              type="radio"
-              name=""
-            />
-          </label>
-        ))}
+        <label htmlFor="category">
+          { name }
+          <input
+            data-testid="category"
+            type="radio"
+            name="category"
+            id={ id }
+            onChange={ onChangeCategory }
+          />
+        </label>
       </div>
     );
   }
 }
+
+ListaDeCategorias.propTypes = {
+  name: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+  onChangeCategory: PropTypes.func.isRequired,
+};
 
 export default ListaDeCategorias;

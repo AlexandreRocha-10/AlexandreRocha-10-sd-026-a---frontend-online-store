@@ -41,13 +41,16 @@ class Home extends Component {
     const response = await getProductsFromCategoryAndQuery(null, queryInput);
     const productList = response.results;
     this.setState({ productList });
-    console.log(response);
   };
 
   render() {
     const { queryInput, productList, listaCategorias } = this.state;
     return (
       <div>
+        <span data-testid="home-initial-message">
+          Digite algum termo de pesquisa ou escolha uma categoria.
+        </span>
+        <br />
         <label htmlFor="queryInput">
           <input
             type="text"
@@ -81,7 +84,7 @@ class Home extends Component {
         <section>
           { productList.length === 0
             ? (
-              <span data-testid="home-initial-message">
+              <span>
                 <br />
                 Nenhum produto foi encontrado
               </span>)

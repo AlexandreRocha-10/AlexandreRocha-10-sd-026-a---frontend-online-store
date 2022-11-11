@@ -5,6 +5,7 @@ import { getProductById } from '../services/api';
 export default class ProductCard extends Component {
   state = {
     product: {},
+    shoppingCartList: [],
   };
 
   async componentDidMount() {
@@ -22,6 +23,17 @@ export default class ProductCard extends Component {
     history.push('/cart');
   };
 
+  handleAddToCartButton = () => {
+    const { product } = this.state;
+    this.setState(({ shoppingCartList }) => ({
+      shoppingCartList: [...shoppingCartList, product],
+    }), () => {
+      const getLocalItem = JSON.parse(localStorage.getItem('shoppingCartList'));
+      const getItem = getLocalItem ? [...getLocalItem, product] : [product];
+      localStorage.setItem('shoppingCartList', JSON.stringify(getItem));
+    });
+  };
+
   render() {
     const { product } = this.state;
     return (
@@ -33,6 +45,13 @@ export default class ProductCard extends Component {
           alt={ product.title }
         />
         <p data-testid="product-detail-price">{ product.price }</p>
+        <button
+          data-testid="product-detail-add-to-cart"
+          type="button"
+          onClick={ this.handleAddToCartButton }
+        >
+          Adicionar ao carrinho de compras
+        </button>
         <button
           data-testid="shopping-cart-button"
           type="button"

@@ -11,12 +11,23 @@ class Home extends Component {
       queryInput: '',
       productList: [],
       listaCategorias: [],
+      shoppingCartList: [],
     };
   }
 
   async componentDidMount() {
     this.setState({ listaCategorias: await getCategories() });
   }
+
+  handleAddToCartButton = (item) => {
+    this.setState(({ shoppingCartList }) => ({
+      shoppingCartList: [...shoppingCartList, item],
+    }), () => {
+      const getLocalItem = JSON.parse(localStorage.getItem('shoppingCartList'));
+      const getItem = getLocalItem ? [...getLocalItem, item] : [item];
+      localStorage.setItem('shoppingCartList', JSON.stringify(getItem));
+    });
+  };
 
   onChangeCategory = async ({ target }) => {
     const { id } = target;
@@ -90,17 +101,26 @@ class Home extends Component {
                 Nenhum produto foi encontrado
               </span>)
             : productList.map((item) => (
-              <Link
-                key={ item.id }
-                data-testid="product-detail-link"
-                to={ `/product/${item.id}` }
-              >
-                <div data-testid="product" key={ item.id }>
-                  <h3>{item.title}</h3>
-                  <img src={ item.thumbnail } alt={ item.title } />
-                  <h2>{ item.price }</h2>
-                </div>
-              </Link>
+              <>
+                <Link
+                  key={ item.id }
+                  data-testid="product-detail-link"
+                  to={ `/product/${item.id}` }
+                >
+                  <div data-testid="product" key={ item.id }>
+                    <h3>{item.title}</h3>
+                    <img src={ item.thumbnail } alt={ item.title } />
+                    <h2>{item.price}</h2>
+                  </div>
+                </Link>
+                <button
+                  data-testid="product-add-to-cart"
+                  type="button"
+                  onClick={ () => this.handleAddToCartButton(item) }
+                >
+                  Adicionar ao carrinho de compras
+                </button>
+              </>
             )) }
         </section>
         <button

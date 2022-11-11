@@ -1,22 +1,53 @@
 import React, { Component } from 'react';
+import CartList from './CartList';
 
 class Cart extends Component {
+  state = {
+    shoppingCartList: [],
+  };
+
+  componentDidMount() {
+    const produtos = JSON.parse(localStorage.getItem('shoppingCartList'));
+    this.setState({ shoppingCartList: produtos });
+  }
+
+  // handleRemoveItem = (item) => {
+  //   const { shoppingCartList } = this.state;
+  //   const arrayRemoved = shoppingCartList.filter((produto) => produto.id !== item.id);
+  // };
+
+  handleReduceItem = (item, i) => {
+    const { shoppingCartList } = this.state;
+    // const repeatedItems = shoppingCartList.filter((produto) => produto.id === item.id);
+    // const
+    // const newA = shoppingCartList.splice(i, 1);
+    const num = -1;
+    if (i > num) {
+      const a = shoppingCartList.splice(i, 1);
+      console.log(a);
+    }
+  };
+
   render() {
     const produtoCarrinho = JSON.parse(localStorage.getItem('shoppingCartList'));
     let cartH1;
-    console.log(produtoCarrinho);
     if (produtoCarrinho === null) {
       cartH1 = (
         <h1 data-testid="shopping-cart-empty-message">
           Seu carrinho está vazio
         </h1>);
     } else {
-      cartH1 = (produtoCarrinho.map((item) => (
-        <div data-testid="shopping-cart-product-name" key={ item.id }>
-          <h4>{item.title}</h4>
-          <img src={ item.thumbnail } alt={ item.title } />
-          <h3>{item.price}</h3>
-        </div>
+      cartH1 = (produtoCarrinho.map((item, i) => (
+        <CartList
+          key={ item.id }
+          title={ item.title }
+          thumbnail={ item.thumbnail }
+          price={ item.price }
+          item={ item }
+          reduceItem={ this.handleReduceItem }
+          i={ i }
+          // addItem={ this.handleAddItem }
+        />
       )));
     }
     return (

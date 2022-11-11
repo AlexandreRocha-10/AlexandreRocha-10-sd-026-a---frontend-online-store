@@ -55,7 +55,7 @@ export default class ProductCard extends Component {
         <button
           data-testid="shopping-cart-button"
           type="button"
-          onClick={ this.handleCartButto }
+          onClick={ this.handleCartButton }
         >
           Ir para o carrinho
         </button>

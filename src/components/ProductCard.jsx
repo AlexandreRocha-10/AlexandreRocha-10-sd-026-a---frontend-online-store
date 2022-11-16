@@ -31,6 +31,7 @@ export default class ProductCard extends Component {
       const getLocalItem = JSON.parse(localStorage.getItem('shoppingCartList'));
       const getItem = getLocalItem ? [...getLocalItem, product] : [product];
       localStorage.setItem('shoppingCartList', JSON.stringify(getItem));
+      localStorage.setItem('numberOfItems', JSON.stringify(getItem));
     });
   };
 

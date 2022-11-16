@@ -9,12 +9,7 @@ class Cart extends Component {
 
   componentDidMount() {
     const produtos = JSON.parse(localStorage.getItem('shoppingCartList'));
-    const getLocalItem = JSON.parse(localStorage.getItem('numberOfItems'));
-    this.setState({ shoppingCartList: produtos }, () => {
-      if (getLocalItem) {
-        this.setState({ numberOfItems: getLocalItem });
-      }
-    });
+    this.setState({ shoppingCartList: produtos });
   }
 
   handleRemoveItem = (item) => {
@@ -26,18 +21,18 @@ class Cart extends Component {
   };
 
   handleAddItem = (item) => {
-    this.setState(
-      ({ numberOfItems }) => ({
-        numberOfItems: [...numberOfItems, item],
-      }),
-      () => {
-        const { numberOfItems } = this.state;
-        localStorage.setItem('numberOfItems', JSON.stringify(numberOfItems));
-      },
-    );
+    const obj = {
+      ...item,
+      quantity: item.quantity += 1,
+    };
+    this.setState(() => (
+      { shoppingCartList: obj }), () => {
+      const { shoppingCartList } = this.state;
+      localStorage.setItem('shoppingCartList', JSON.stringify(shoppingCartList));
+    });
   };
 
-  handleReduceItem = (item) => {
+  handleDecreaseItem = (item) => {
     const { numberOfItems } = this.state;
     let count = 0;
     const value = numberOfItems.filter((prod) => {
@@ -61,18 +56,17 @@ class Cart extends Component {
           Seu carrinho está vazio
         </h1>);
     } else {
-      cartH1 = (shoppingCartList.map((item, i) => (
+      cartH1 = (shoppingCartList.map((item) => (
         <CartList
           key={ item.id }
           title={ item.title }
           thumbnail={ item.thumbnail }
           price={ item.price }
           item={ item }
-          handleReduceItem={ this.handleReduceItem }
+          handleDecreaseItem={ this.handleDecreaseItem }
           handleRemoveItem={ this.handleRemoveItem }
           handleAddItem={ this.handleAddItem }
           numberOfItems={ numberOfItems }
-          i={ i }
         />
       )));
     }

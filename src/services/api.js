@@ -24,6 +24,5 @@ export async function getProductById(productId) {
   const url = `https://api.mercadolibre.com/items/${productId}`;
   const request = await fetch(url);
   const response = await request.json();
-  console.log(response);
   return response;
 }

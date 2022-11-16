@@ -4,17 +4,12 @@ import CartList from './CartList';
 class Cart extends Component {
   state = {
     shoppingCartList: [],
-    numberOfItems: [],
+    counterTotal: 0,
   };
 
   componentDidMount() {
     const produtos = JSON.parse(localStorage.getItem('shoppingCartList'));
-    const getLocalItem = JSON.parse(localStorage.getItem('numberOfItems'));
-    this.setState({ shoppingCartList: produtos }, () => {
-      if (getLocalItem) {
-        this.setState({ numberOfItems: getLocalItem });
-      }
-    });
+    this.setState({ shoppingCartList: produtos });
   }
 
   handleRemoveItem = (item) => {
@@ -22,38 +17,54 @@ class Cart extends Component {
     const arrayRemoved = shoppingCartList.filter((produto) => produto.id !== item.id);
     this.setState({ shoppingCartList: arrayRemoved }, () => {
       localStorage.setItem('shoppingCartList', JSON.stringify(arrayRemoved));
+    }, () => {
+      this.funcTeste();
     });
   };
 
-  handleAddItem = (item) => {
-    this.setState(
-      ({ numberOfItems }) => ({
-        numberOfItems: [...numberOfItems, item],
-      }),
-      () => {
-        const { numberOfItems } = this.state;
-        localStorage.setItem('numberOfItems', JSON.stringify(numberOfItems));
-      },
-    );
+  handleChangeItem = (item, operator) => {
+    const getLocalItem = JSON.parse(localStorage.getItem('shoppingCartList')) || [];
+    let teste = item.quantity;
+    if (operator) {
+      teste += 1;
+    } else if (item.quantity > 1) {
+      teste -= 1;
+    }
+    const truFal = getLocalItem.some((produto) => produto.id === item.id);
+    if (truFal) {
+      const retorno = getLocalItem.map((elem) => {
+        if (item.id === elem.id) {
+          const obj = {
+            ...elem,
+            quantity: elem.quantity = teste,
+          };
+          return obj;
+        }
+        return elem;
+      });
+      this.setState({ shoppingCartList: retorno });
+      localStorage.setItem('shoppingCartList', JSON.stringify(retorno));
+      this.funcTeste();
+    } else {
+      this.setState(({ shoppingCartList: [...getLocalItem, { ...item, quantity: 1 }],
+      }), () => {
+        const { shoppingCartList } = this.state;
+        localStorage.setItem('shoppingCartList', JSON.stringify(shoppingCartList));
+        this.funcTeste();
+      });
+    }
   };
 
-  handleReduceItem = (item) => {
-    const { numberOfItems } = this.state;
-    let count = 0;
-    const value = numberOfItems.filter((prod) => {
-      if (item.id === prod.id && count === 0) {
-        count += 1;
-        return false;
-      }
-      return true;
+  funcTeste = () => {
+    const { shoppingCartList } = this.state;
+    shoppingCartList.forEach((produto) => {
+      const qtd = produto.quantity;
+      this.setState(({ counterTotal }) => ({ counterTotal: [+counterTotal + +qtd] }));
     });
-    this.setState({ numberOfItems: value });
-    localStorage.setItem('numberOfItems', JSON.stringify(numberOfItems));
   };
 
   render() {
-    const { shoppingCartList, numberOfItems } = this.state;
-
+    const { shoppingCartList, counterTotal } = this.state;
     let cartH1;
     if (shoppingCartList === null) {
       cartH1 = (
@@ -61,30 +72,27 @@ class Cart extends Component {
           Seu carrinho está vazio
         </h1>);
     } else {
-      cartH1 = (shoppingCartList.map((item, i) => (
+      cartH1 = (shoppingCartList.map((item) => (
         <CartList
           key={ item.id }
           title={ item.title }
           thumbnail={ item.thumbnail }
           price={ item.price }
           item={ item }
-          handleReduceItem={ this.handleReduceItem }
           handleRemoveItem={ this.handleRemoveItem }
-          handleAddItem={ this.handleAddItem }
-          numberOfItems={ numberOfItems }
-          i={ i }
+          handleChangeItem={ this.handleChangeItem }
         />
       )));
     }
     return (
       <div>
         { cartH1 }
-        <h2
-          data-testid="shopping-cart-product-quantity"
-        >
-          Total de produtos no carrinho:
-          {' '}
+        Total de produtos no carrinho:
+        {/* <h2 data-testid="shopping-cart-product-quantity">
           { shoppingCartList !== null ? shoppingCartList.length : 0 }
+        </h2> */}
+        <h2 data-testid="shopping-cart-product-quantity">
+          { counterTotal }
         </h2>
       </div>
     );

@@ -25,14 +25,28 @@ export default class ProductCard extends Component {
 
   handleAddToCartButton = () => {
     const { product } = this.state;
-    this.setState(({ shoppingCartList }) => ({
-      shoppingCartList: [...shoppingCartList, product],
-    }), () => {
-      const getLocalItem = JSON.parse(localStorage.getItem('shoppingCartList'));
-      const getItem = getLocalItem ? [...getLocalItem, product] : [product];
-      localStorage.setItem('shoppingCartList', JSON.stringify(getItem));
-      localStorage.setItem('numberOfItems', JSON.stringify(getItem));
-    });
+    const getLocalItem = JSON.parse(localStorage.getItem('shoppingCartList')) || [];
+    const truFal = getLocalItem.some((produto) => produto.id === product.id);
+    if (truFal) {
+      const retorno = getLocalItem.map((elem) => {
+        if (product.id === elem.id) {
+          const obj = {
+            ...elem,
+            quantity: elem.quantity += 1,
+          };
+          return obj;
+        }
+        return elem;
+      });
+      this.setState({ shoppingCartList: retorno });
+      localStorage.setItem('shoppingCartList', JSON.stringify(retorno));
+    } else {
+      this.setState(({ shoppingCartList: [...getLocalItem, { ...product, quantity: 1 }],
+      }), () => {
+        const { shoppingCartList } = this.state;
+        localStorage.setItem('shoppingCartList', JSON.stringify(shoppingCartList));
+      });
+    }
   };
 
   render() {

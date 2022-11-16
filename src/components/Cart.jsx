@@ -4,49 +4,71 @@ import CartList from './CartList';
 class Cart extends Component {
   state = {
     shoppingCartList: [],
+    numberOfItems: [],
   };
 
   componentDidMount() {
     const produtos = JSON.parse(localStorage.getItem('shoppingCartList'));
-    this.setState({ shoppingCartList: produtos });
+    this.setState({ shoppingCartList: produtos, numberOfItems: produtos });
   }
 
-  // handleRemoveItem = (item) => {
-  //   const { shoppingCartList } = this.state;
-  //   const arrayRemoved = shoppingCartList.filter((produto) => produto.id !== item.id);
-  // };
+  handleRemoveItem = (item) => {
+    const { shoppingCartList } = this.state;
+    const arrayRemoved = shoppingCartList.filter((produto) => produto.id !== item.id);
+
+    this.setState({ shoppingCartList: arrayRemoved }, () => {
+      localStorage.setItem('shoppingCartList', JSON.stringify(arrayRemoved));
+    });
+  };
+
+  handleAddItem = (item) => {
+    this.setState(
+      ({ numberOfItems }) => ({
+        numberOfItems: [...numberOfItems, item],
+      }),
+      () => {
+        const getLocalItem = JSON.parse(localStorage.getItem('numberOfItems'));
+        const getItem = getLocalItem ? [...getLocalItem, item] : [item];
+        localStorage.setItem('numberOfItems', JSON.stringify(getItem));
+      },
+    );
+  };
 
   handleReduceItem = (item, i) => {
-    const { shoppingCartList } = this.state;
-    // const repeatedItems = shoppingCartList.filter((produto) => produto.id === item.id);
-    // const
-    // const newA = shoppingCartList.splice(i, 1);
-    const num = -1;
-    if (i > num) {
-      const a = shoppingCartList.splice(i, 1);
-      console.log(a);
-    }
+    this.setState(
+      ({ numberOfItems }) => ({
+        numberOfItems: [...numberOfItems, item],
+      }),
+      () => {
+        const getLocalItem = JSON.parse(localStorage.getItem('numberOfItems'));
+        const getItem = getLocalItem ? getLocalItem.splice(getLocalItem.indexOf(i), 1) : [item];
+        localStorage.setItem('numberOfItems', JSON.stringify(getItem));
+      },
+    );
   };
 
   render() {
-    const produtoCarrinho = JSON.parse(localStorage.getItem('shoppingCartList'));
+    const { shoppingCartList, numberOfItems } = this.state;
+
     let cartH1;
-    if (produtoCarrinho === null) {
+    if (shoppingCartList === null) {
       cartH1 = (
         <h1 data-testid="shopping-cart-empty-message">
           Seu carrinho está vazio
         </h1>);
     } else {
-      cartH1 = (produtoCarrinho.map((item, i) => (
+      cartH1 = (shoppingCartList.map((item, i) => (
         <CartList
           key={ item.id }
           title={ item.title }
           thumbnail={ item.thumbnail }
           price={ item.price }
           item={ item }
-          reduceItem={ this.handleReduceItem }
+          handleReduceItem={ this.handleReduceItem }
+          handleRemoveItem={ this.handleRemoveItem }
+          handleAddItem={ this.handleAddItem }
+          numberOfItems={ numberOfItems }
           i={ i }
-          // addItem={ this.handleAddItem }
         />
       )));
     }
@@ -58,7 +80,7 @@ class Cart extends Component {
         >
           Total de produtos no carrinho:
           {' '}
-          { produtoCarrinho !== null ? produtoCarrinho.length : 0 }
+          { shoppingCartList !== null ? shoppingCartList.length : 0 }
         </h2>
       </div>
     );

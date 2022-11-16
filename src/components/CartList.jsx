@@ -17,6 +17,7 @@ class CartList extends Component {
     let valor;
     if (numberOfItems !== null) {
       valor = numberOfItems.filter((elem) => elem.id === item.id).length;
+      console.log(numberOfItems);
     }
     return (
       <div>

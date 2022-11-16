@@ -9,13 +9,17 @@ class Cart extends Component {
 
   componentDidMount() {
     const produtos = JSON.parse(localStorage.getItem('shoppingCartList'));
-    this.setState({ shoppingCartList: produtos, numberOfItems: produtos });
+    const getLocalItem = JSON.parse(localStorage.getItem('numberOfItems'));
+    this.setState({ shoppingCartList: produtos }, () => {
+      if (getLocalItem) {
+        this.setState({ numberOfItems: getLocalItem });
+      }
+    });
   }
 
   handleRemoveItem = (item) => {
     const { shoppingCartList } = this.state;
     const arrayRemoved = shoppingCartList.filter((produto) => produto.id !== item.id);
-
     this.setState({ shoppingCartList: arrayRemoved }, () => {
       localStorage.setItem('shoppingCartList', JSON.stringify(arrayRemoved));
     });
@@ -27,24 +31,24 @@ class Cart extends Component {
         numberOfItems: [...numberOfItems, item],
       }),
       () => {
-        const getLocalItem = JSON.parse(localStorage.getItem('numberOfItems'));
-        const getItem = getLocalItem ? [...getLocalItem, item] : [item];
-        localStorage.setItem('numberOfItems', JSON.stringify(getItem));
+        const { numberOfItems } = this.state;
+        localStorage.setItem('numberOfItems', JSON.stringify(numberOfItems));
       },
     );
   };
 
-  handleReduceItem = (item, i) => {
-    this.setState(
-      ({ numberOfItems }) => ({
-        numberOfItems: [...numberOfItems, item],
-      }),
-      () => {
-        const getLocalItem = JSON.parse(localStorage.getItem('numberOfItems'));
-        const getItem = getLocalItem ? getLocalItem.splice(getLocalItem.indexOf(i), 1) : [item];
-        localStorage.setItem('numberOfItems', JSON.stringify(getItem));
-      },
-    );
+  handleReduceItem = (item) => {
+    const { numberOfItems } = this.state;
+    let count = 0;
+    const value = numberOfItems.filter((prod) => {
+      if (item.id === prod.id && count === 0) {
+        count += 1;
+        return false;
+      }
+      return true;
+    });
+    this.setState({ numberOfItems: value });
+    localStorage.setItem('numberOfItems', JSON.stringify(numberOfItems));
   };
 
   render() {

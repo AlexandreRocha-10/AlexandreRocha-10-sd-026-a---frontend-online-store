@@ -26,6 +26,7 @@ class Home extends Component {
       const getLocalItem = JSON.parse(localStorage.getItem('shoppingCartList'));
       const getItem = getLocalItem ? [...getLocalItem, item] : [item];
       localStorage.setItem('shoppingCartList', JSON.stringify(getItem));
+      localStorage.setItem('numberOfItems', JSON.stringify(getItem));
     });
   };
 

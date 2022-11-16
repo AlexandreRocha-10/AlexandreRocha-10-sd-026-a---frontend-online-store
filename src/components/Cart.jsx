@@ -4,6 +4,7 @@ import CartList from './CartList';
 class Cart extends Component {
   state = {
     shoppingCartList: [],
+    counterTotal: 0,
   };
 
   componentDidMount() {
@@ -16,6 +17,8 @@ class Cart extends Component {
     const arrayRemoved = shoppingCartList.filter((produto) => produto.id !== item.id);
     this.setState({ shoppingCartList: arrayRemoved }, () => {
       localStorage.setItem('shoppingCartList', JSON.stringify(arrayRemoved));
+    }, () => {
+      this.funcTeste();
     });
   };
 
@@ -41,17 +44,27 @@ class Cart extends Component {
       });
       this.setState({ shoppingCartList: retorno });
       localStorage.setItem('shoppingCartList', JSON.stringify(retorno));
+      this.funcTeste();
     } else {
       this.setState(({ shoppingCartList: [...getLocalItem, { ...item, quantity: 1 }],
       }), () => {
         const { shoppingCartList } = this.state;
         localStorage.setItem('shoppingCartList', JSON.stringify(shoppingCartList));
+        this.funcTeste();
       });
     }
   };
 
-  render() {
+  funcTeste = () => {
     const { shoppingCartList } = this.state;
+    shoppingCartList.forEach((produto) => {
+      const qtd = produto.quantity;
+      this.setState(({ counterTotal }) => ({ counterTotal: [+counterTotal + +qtd] }));
+    });
+  };
+
+  render() {
+    const { shoppingCartList, counterTotal } = this.state;
     let cartH1;
     if (shoppingCartList === null) {
       cartH1 = (
@@ -78,9 +91,9 @@ class Cart extends Component {
         {/* <h2 data-testid="shopping-cart-product-quantity">
           { shoppingCartList !== null ? shoppingCartList.length : 0 }
         </h2> */}
-        <span data-testid="shopping-cart-product-quantity">
-          { shoppingCartList.length }
-        </span>
+        <h2 data-testid="shopping-cart-product-quantity">
+          { counterTotal }
+        </h2>
       </div>
     );
   }

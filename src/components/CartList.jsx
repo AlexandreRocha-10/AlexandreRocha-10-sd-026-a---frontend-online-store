@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 class CartList extends Component {
   render() {
-    const { title, thumbnail, price, handleAddItem, handleRemoveItem,
-      handleDecreaseItem, item } = this.props;
+    const { title, thumbnail, price, handleChangeItem, handleRemoveItem,
+      item } = this.props;
     return (
       <div data-testid="shopping-cart-product-name">
         <h4>{title}</h4>
@@ -23,10 +23,10 @@ class CartList extends Component {
         <button
           data-testid="product-decrease-quantity"
           type="button"
-          onClick={ () => handleDecreaseItem(item) }
+          onClick={ () => handleChangeItem(item, false) }
         >
           {' '}
-          Diminuir -
+          Diminuir
           {' '}
         </button>
         <label htmlFor="additem">
@@ -35,10 +35,10 @@ class CartList extends Component {
         <button
           data-testid="product-increase-quantity"
           type="button"
-          onClick={ () => handleAddItem(item) }
+          onClick={ () => handleChangeItem(item, true) }
         >
           {' '}
-          Adicionar +
+          Adicionar
           {' '}
         </button>
       </div>
@@ -50,7 +50,8 @@ CartList.propTypes = {
   title: PropTypes.string,
   thumbnail: PropTypes.string,
   price: PropTypes.number,
-  i: PropTypes.number,
+  handleChangeItem: PropTypes.func,
+  handleRemoveItem: PropTypes.func,
 }.isRequired;
 
 export default CartList;

@@ -4,7 +4,6 @@ import CartList from './CartList';
 class Cart extends Component {
   state = {
     shoppingCartList: [],
-    counterTotal: 0,
   };
 
   componentDidMount() {
@@ -17,8 +16,6 @@ class Cart extends Component {
     const arrayRemoved = shoppingCartList.filter((produto) => produto.id !== item.id);
     this.setState({ shoppingCartList: arrayRemoved }, () => {
       localStorage.setItem('shoppingCartList', JSON.stringify(arrayRemoved));
-    }, () => {
-      this.funcTeste();
     });
   };
 
@@ -44,29 +41,25 @@ class Cart extends Component {
       });
       this.setState({ shoppingCartList: retorno });
       localStorage.setItem('shoppingCartList', JSON.stringify(retorno));
-      this.funcTeste();
     } else {
       this.setState(({ shoppingCartList: [...getLocalItem, { ...item, quantity: 1 }],
       }), () => {
         const { shoppingCartList } = this.state;
         localStorage.setItem('shoppingCartList', JSON.stringify(shoppingCartList));
-        this.funcTeste();
       });
     }
   };
 
-  funcTeste = () => {
-    const { shoppingCartList } = this.state;
-    shoppingCartList.forEach((produto) => {
-      const qtd = produto.quantity;
-      this.setState(({ counterTotal }) => ({ counterTotal: [+counterTotal + +qtd] }));
-    });
-  };
-
   render() {
-    const { shoppingCartList, counterTotal } = this.state;
+    const { shoppingCartList } = this.state;
+    let arrQty;
+    let sumQty;
+    if (shoppingCartList) {
+      arrQty = shoppingCartList.map((item) => item.quantity);
+      sumQty = arrQty.reduce((acc, val) => acc + val, 0);
+    }
     let cartH1;
-    if (shoppingCartList === null) {
+    if (!shoppingCartList) {
       cartH1 = (
         <h1 data-testid="shopping-cart-empty-message">
           Seu carrinho está vazio
@@ -88,11 +81,8 @@ class Cart extends Component {
       <div>
         { cartH1 }
         Total de produtos no carrinho:
-        {/* <h2 data-testid="shopping-cart-product-quantity">
-          { shoppingCartList !== null ? shoppingCartList.length : 0 }
-        </h2> */}
         <h2 data-testid="shopping-cart-product-quantity">
-          { counterTotal }
+          { sumQty }
         </h2>
       </div>
     );

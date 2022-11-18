@@ -52,10 +52,14 @@ class Cart extends Component {
 
   render() {
     const { shoppingCartList } = this.state;
-    const arrQty = shoppingCartList.map((item) => item.quantity);
-    const sumQty = arrQty.reduce((acc, val) => acc + val, 0);
+    let arrQty;
+    let sumQty;
+    if (shoppingCartList) {
+      arrQty = shoppingCartList.map((item) => item.quantity);
+      sumQty = arrQty.reduce((acc, val) => acc + val, 0);
+    }
     let cartH1;
-    if (shoppingCartList === null) {
+    if (!shoppingCartList) {
       cartH1 = (
         <h1 data-testid="shopping-cart-empty-message">
           Seu carrinho está vazio

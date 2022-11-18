@@ -29,9 +29,14 @@ class CartList extends Component {
           Diminuir
           {' '}
         </button>
-        <label htmlFor="additem">
-          <input type="number" disabled value={ item.quantity } id="additem" />
-        </label>
+        <p
+          data-testid="shopping-cart-product-quantity"
+          type="number"
+          disabled
+          id="additem"
+        >
+          { item.quantity }
+        </p>
         <button
           data-testid="product-increase-quantity"
           type="button"

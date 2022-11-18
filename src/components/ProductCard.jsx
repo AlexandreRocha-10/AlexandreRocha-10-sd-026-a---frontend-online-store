@@ -9,9 +9,7 @@ export default class ProductCard extends Component {
   };
 
   async componentDidMount() {
-    const { match } = this.props;
-    const { params } = match;
-    const { id } = params;
+    const { match: { params: { id } } } = this.props;
     const prod = await getProductById(id);
     this.setState({
       product: prod,
@@ -80,6 +78,11 @@ export default class ProductCard extends Component {
 }
 
 ProductCard.propTypes = {
-  history: PropTypes.string.isRequired,
-  match: PropTypes.string.isRequired,
-};
+  history: PropTypes.shape({
+    match: PropTypes.shape({
+      params: PropTypes.shape({
+        id: PropTypes.number,
+      }),
+    }),
+  }),
+}.isRequired;

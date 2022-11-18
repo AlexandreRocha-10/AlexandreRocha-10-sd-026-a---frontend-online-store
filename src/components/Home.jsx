@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import ListaDeCategorias from './ListaDeCategorias';
+import CategoryList from './CategoryList';
 import { getProductsFromCategoryAndQuery, getCategories } from '../services/api';
 
 class Home extends Component {
@@ -10,13 +10,13 @@ class Home extends Component {
     this.state = {
       queryInput: '',
       productList: [],
-      listaCategorias: [],
+      categoryList: [],
       shoppingCartList: [],
     };
   }
 
   async componentDidMount() {
-    this.setState({ listaCategorias: await getCategories() });
+    this.setState({ categoryList: await getCategories() });
   }
 
   handleAddToCartButton = (item) => {
@@ -71,7 +71,7 @@ class Home extends Component {
   };
 
   render() {
-    const { queryInput, productList, listaCategorias } = this.state;
+    const { queryInput, productList, categoryList } = this.state;
     return (
       <div>
         <span data-testid="home-initial-message">
@@ -99,13 +99,14 @@ class Home extends Component {
           Categorias
           <br />
           <br />
-          {listaCategorias.map(({ name, id }) => (
-            <ListaDeCategorias
-              key={ id }
-              id={ id }
-              name={ name }
-              onChangeCategory={ this.onChangeCategory }
-            />
+          {categoryList.map(({ name, id }) => (
+            <div key={ id }>
+              <CategoryList
+                id={ id }
+                name={ name }
+                onChangeCategory={ this.onChangeCategory }
+              />
+            </div>
           ))}
         </div>
         <section>

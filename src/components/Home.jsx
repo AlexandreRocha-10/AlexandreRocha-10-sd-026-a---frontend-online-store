@@ -116,9 +116,8 @@ class Home extends Component {
                 Nenhum produto foi encontrado
               </span>)
             : productList.map((item) => (
-              <>
+              <div key={ item.id }>
                 <Link
-                  key={ item.id }
                   data-testid="product-detail-link"
                   to={ `/product/${item.id}` }
                 >
@@ -135,7 +134,7 @@ class Home extends Component {
                 >
                   Adicionar ao carrinho de compras
                 </button>
-              </>
+              </div>
             )) }
         </section>
         <button

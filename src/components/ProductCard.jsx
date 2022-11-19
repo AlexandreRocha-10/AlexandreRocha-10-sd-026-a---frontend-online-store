@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getProductById } from '../services/api';
+import RatingProductForm from './RatingProductForm';
 
 export default class ProductCard extends Component {
   state = {
@@ -49,6 +50,7 @@ export default class ProductCard extends Component {
 
   render() {
     const { product } = this.state;
+    const { match: { params: { id } } } = this.props;
     return (
       <div>
         <span data-testid="product-detail-name">{ product.title }</span>
@@ -72,6 +74,7 @@ export default class ProductCard extends Component {
         >
           Ir para o carrinho
         </button>
+        <RatingProductForm id={ id } />
       </div>
     );
   }

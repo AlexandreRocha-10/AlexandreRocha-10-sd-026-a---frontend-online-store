@@ -87,7 +87,7 @@ class Cart extends Component {
       <div>
         { cartH1 }
         Total de produtos no carrinho:
-        <h2>
+        <h2 data-testid="shopping-cart-size">
           { sumQty }
         </h2>
         <button

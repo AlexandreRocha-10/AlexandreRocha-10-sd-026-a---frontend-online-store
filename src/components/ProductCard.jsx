@@ -51,6 +51,13 @@ export default class ProductCard extends Component {
   render() {
     const { product } = this.state;
     const { match: { params: { id } } } = this.props;
+    const getLocalItem = JSON.parse(localStorage.getItem('shoppingCartList'));
+    let arrQty;
+    let sumQty;
+    if (getLocalItem) {
+      arrQty = getLocalItem.map((item) => item.quantity);
+      sumQty = arrQty.reduce((acc, val) => acc + val, 0);
+    }
     return (
       <div>
         <span data-testid="product-detail-name">{ product.title }</span>
@@ -74,6 +81,9 @@ export default class ProductCard extends Component {
         >
           Ir para o carrinho
         </button>
+        <div data-testid="shopping-cart-size">
+          { sumQty }
+        </div>
         <RatingProductForm id={ id } />
       </div>
     );

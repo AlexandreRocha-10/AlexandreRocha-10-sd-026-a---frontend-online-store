@@ -71,7 +71,13 @@ class Home extends Component {
   };
 
   render() {
-    const { queryInput, productList, categoryList } = this.state;
+    const { queryInput, productList, categoryList, shoppingCartList } = this.state;
+    let arrQty;
+    let sumQty;
+    if (shoppingCartList) {
+      arrQty = shoppingCartList.map((item) => item.quantity);
+      sumQty = arrQty.reduce((acc, val) => acc + val, 0);
+    }
     return (
       <div>
         <span data-testid="home-initial-message">
@@ -116,6 +122,9 @@ class Home extends Component {
         >
           Ir para o carrinho
         </button>
+        <div data-testid="shopping-cart-size">
+          { sumQty }
+        </div>
         <section>
           { productList.length === 0
             ? (

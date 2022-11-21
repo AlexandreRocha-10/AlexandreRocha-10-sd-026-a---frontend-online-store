@@ -109,6 +109,13 @@ class Home extends Component {
             </div>
           ))}
         </div>
+        <button
+          data-testid="shopping-cart-button"
+          type="button"
+          onClick={ this.handleCartButton }
+        >
+          Ir para o carrinho
+        </button>
         <section>
           { productList.length === 0
             ? (
@@ -138,13 +145,6 @@ class Home extends Component {
               </div>
             )) }
         </section>
-        <button
-          data-testid="shopping-cart-button"
-          type="button"
-          onClick={ this.handleCartButton }
-        >
-          Ir para o carrinho
-        </button>
       </div>
     );
   }

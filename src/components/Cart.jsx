@@ -23,8 +23,11 @@ class Cart extends Component {
   handleChangeItem = (item, operator) => {
     const getLocalItem = JSON.parse(localStorage.getItem('shoppingCartList')) || [];
     let teste = item.quantity;
+    console.log(item);
     if (operator) {
-      teste += 1;
+      if (item.quantity < item.available_quantity) {
+        teste += 1;
+      }
     } else if (item.quantity > 1) {
       teste -= 1;
     }

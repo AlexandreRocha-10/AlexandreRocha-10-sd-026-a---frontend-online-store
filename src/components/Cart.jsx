@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import CartList from './CartList';
 
 class Cart extends Component {
@@ -50,6 +51,11 @@ class Cart extends Component {
     }
   };
 
+  checkoutBtn = () => {
+    const { history } = this.props;
+    history.push('/checkout');
+  };
+
   render() {
     const { shoppingCartList } = this.state;
     let arrQty;
@@ -84,9 +90,21 @@ class Cart extends Component {
         <h2>
           { sumQty }
         </h2>
+        <button
+          type="button"
+          data-testid="checkout-products"
+          onClick={ this.checkoutBtn }
+        >
+          Checkout
+        </button>
       </div>
     );
   }
 }
 
+Cart.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+};
 export default Cart;

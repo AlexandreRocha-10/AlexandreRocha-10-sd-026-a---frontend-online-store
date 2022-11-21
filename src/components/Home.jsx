@@ -142,6 +142,8 @@ class Home extends Component {
                     <h3>{item.title}</h3>
                     <img src={ item.thumbnail } alt={ item.title } />
                     <h2>{item.price}</h2>
+                    { item.shipping.free_shipping
+                     && <div data-testid="free-shipping"> free shipping </div> }
                   </div>
                 </Link>
                 <button

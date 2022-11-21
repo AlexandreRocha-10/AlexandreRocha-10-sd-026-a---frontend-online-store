@@ -7,6 +7,7 @@ export default class ProductCard extends Component {
   state = {
     product: {},
     shoppingCartList: [],
+    shipping: false,
   };
 
   async componentDidMount() {
@@ -14,6 +15,9 @@ export default class ProductCard extends Component {
     const prod = await getProductById(id);
     this.setState({
       product: prod,
+    }, () => {
+      const { product } = this.state;
+      this.setState({ shipping: product.shipping.free_shipping });
     });
   }
 
@@ -49,7 +53,7 @@ export default class ProductCard extends Component {
   };
 
   render() {
-    const { product } = this.state;
+    const { product, shipping } = this.state;
     const { match: { params: { id } } } = this.props;
     const getLocalItem = JSON.parse(localStorage.getItem('shoppingCartList'));
     let arrQty;
@@ -67,6 +71,7 @@ export default class ProductCard extends Component {
           alt={ product.title }
         />
         <p data-testid="product-detail-price">{ product.price }</p>
+        <p data-testid="free-shipping">{ shipping && <div>free shipping</div> }</p>
         <button
           data-testid="product-detail-add-to-cart"
           type="button"
